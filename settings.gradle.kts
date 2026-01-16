@@ -23,4 +23,5 @@ dependencyResolutionManagement {
 rootProject.name = "compose-google-fonts"
 
 include(":core")
+include(":fetch-ktor")
 include(":example")

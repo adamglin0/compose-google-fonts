@@ -10,13 +10,15 @@
 
 ``` file="libs.versions.toml"
 [versions]
-compose-google-fonts = "latest-version"
+composeGoogleFonts = "latest-version"
 [libraries]
-compose-google-fonts = { module = "com.adamglin:compose-google-fonts", version.ref = "compose-google-fonts" }
+composeGoogleFonts-core = { module = "com.adamglin:compose-google-fonts:core", version.ref = "compose-google-fonts" }
+composeGoogleFonts-fetch-ktor = { module = "com.adamglin:compose-google-fonts:fetch-ktor", version.ref = "compose-google-fonts" }
 ```
 
 **build.gradle.kts**
 
 ``` kts
-implementation(libs.compose.google.fonts)
+implementation(libs.composeGoogleFonts.core)
+implementation(libs.composeGoogleFonts.fetch.ktor)
 ```
