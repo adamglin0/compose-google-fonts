@@ -33,5 +33,4 @@ build/
 .specstory/
 local.properties
 mise.local.toml
-webfonts.json
 docs/plans
