@@ -20,6 +20,10 @@ kotlin {
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
+            implementation(libs.kotlinx.coroutines.swing)
+
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
 
             implementation(projects.core)
             implementation(projects.fetchKtor)

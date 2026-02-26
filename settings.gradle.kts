@@ -4,6 +4,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
+        mavenLocal()
         google()
         mavenCentral()
         gradlePluginPortal()
@@ -13,6 +14,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        mavenLocal()
         google()
         mavenCentral()
         gradlePluginPortal()
@@ -20,8 +22,9 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "compose-google-fonts"
+rootProject.name = "compose-async-fonts"
 
 include(":core")
+include(":google-fonts")
 include(":fetch-ktor")
 include(":example")

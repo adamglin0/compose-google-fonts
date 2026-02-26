@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import com.android.build.api.dsl.androidLibrary
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -20,7 +19,7 @@ kotlin {
 
     @Suppress("UnstableApiUsage")
     androidLibrary {
-        namespace = "com.adamglin.zithian.compose"
+        namespace = "com.adamglin.compose.google.fonts"
         compileSdk = 36
         minSdk = 29
     }
@@ -72,6 +71,7 @@ kotlin {
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
+            implementation(libs.kotlinx.coroutines.core)
         }
         all {
             languageSettings {
@@ -81,5 +81,6 @@ kotlin {
     }
     compilerOptions {
         freeCompilerArgs.add("-Xcontext-parameters")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }
