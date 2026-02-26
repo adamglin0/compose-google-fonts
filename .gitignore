@@ -31,3 +31,7 @@ compose-google-fonts.iml
 .kotlin/
 build/
 .specstory/
+local.properties
+mise.local.toml
+webfonts.json
+docs/plans

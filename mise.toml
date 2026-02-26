@@ -1,0 +1,18 @@
+[tools]
+gradle = "latest"
+
+[tasks.download-google-fonts-json]
+run = """
+if [ -z "${GOOGLE_DEVELOPER_API_KEY:-}" ]; then
+  echo "GOOGLE_DEVELOPER_API_KEY is not set"
+  exit 1
+fi
+
+if [ -n "${GOOGLE_DEVELOPER_API_REFERER:-}" ]; then
+  curl -fsS -H "Referer: ${GOOGLE_DEVELOPER_API_REFERER}" "https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_DEVELOPER_API_KEY}" \
+    -o webfonts.json
+else
+  curl -fsS "https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_DEVELOPER_API_KEY}" \
+    -o webfonts.json
+fi
+"""
