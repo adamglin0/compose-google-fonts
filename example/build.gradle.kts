@@ -26,6 +26,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
 
             implementation(projects.core)
+            implementation(projects.googleFonts)
             implementation(projects.fetchKtor)
         }
     }

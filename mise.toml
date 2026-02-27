@@ -8,11 +8,24 @@ if [ -z "${GOOGLE_DEVELOPER_API_KEY:-}" ]; then
   exit 1
 fi
 
+BASE_URL="https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_DEVELOPER_API_KEY}"
+
 if [ -n "${GOOGLE_DEVELOPER_API_REFERER:-}" ]; then
-  curl -fsS -H "Referer: ${GOOGLE_DEVELOPER_API_REFERER}" "https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_DEVELOPER_API_KEY}" \
-    -o webfonts.json
+  curl -fsS -H "Referer: ${GOOGLE_DEVELOPER_API_REFERER}" "${BASE_URL}" \
+    -o webfonts.static.json
+  curl -fsS -H "Referer: ${GOOGLE_DEVELOPER_API_REFERER}" "${BASE_URL}&capability=VF" \
+    -o webfonts.vf.json
 else
-  curl -fsS "https://www.googleapis.com/webfonts/v1/webfonts?key=${GOOGLE_DEVELOPER_API_KEY}" \
-    -o webfonts.json
+  curl -fsS "${BASE_URL}" \
+    -o webfonts.static.json
+  curl -fsS "${BASE_URL}&capability=VF" \
+    -o webfonts.vf.json
 fi
+
+python3 scripts/merge_webfonts_json.py \
+  --static webfonts.static.json \
+  --vf webfonts.vf.json \
+  --out webfonts.json
+
+rm -f webfonts.static.json webfonts.vf.json
 """

@@ -1,0 +1,44 @@
+name: OpenCode follow-up for webfonts PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  opencode:
+    if: contains(github.event.pull_request.title, 'update webfonts.json')
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+      issues: write
+    concurrency:
+      group: opencode-webfonts-pr-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run OpenCode
+        uses: anomalyco/opencode/github@latest
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          model: ${{ vars.OPENCODE_MODEL || 'anthropic/claude-sonnet-4-20250514' }}
+          use_github_token: true
+          prompt: |
+            This pull request updates webfonts.json.
+
+            Please analyze the current PR diff and update any generated or dependent code that must change because of the new webfonts data.
+
+            Requirements:
+            - Focus only on changes required by this webfonts.json update.
+            - Keep changes minimal and consistent with existing project conventions.
+            - Commit updates directly to this PR branch.
+            - If no code changes are needed beyond webfonts.json, explain that briefly in the PR conversation and do not make unrelated edits.

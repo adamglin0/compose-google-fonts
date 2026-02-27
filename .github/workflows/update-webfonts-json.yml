@@ -1,0 +1,54 @@
+name: Update webfonts.json daily
+
+on:
+  schedule:
+    # China Standard Time (UTC+8) 12:00 => UTC 04:00
+    - cron: "0 4 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-webfonts:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup mise
+        uses: jdx/mise-action@v2
+
+      - name: Download latest webfonts.json
+        env:
+          GOOGLE_DEVELOPER_API_KEY: ${{ secrets.GOOGLE_DEVELOPER_API_KEY }}
+          GOOGLE_DEVELOPER_API_REFERER: "https://explorer.apis.google.com"
+        run: mise run tasks.download-google-fonts-json
+
+      - name: Check if webfonts.json changed
+        id: diff
+        run: |
+          if git diff --quiet -- webfonts.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create pull request when changed
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/update-webfonts-json
+          delete-branch: false
+          title: "chore: update webfonts.json"
+          body: |
+            This PR updates `webfonts.json` with the latest Google Web Fonts metadata.
+
+            - Source task: `tasks.download-google-fonts-json`
+            - Trigger: daily scheduled workflow
+          commit-message: "chore: update webfonts.json"
+          add-paths: |
+            webfonts.json

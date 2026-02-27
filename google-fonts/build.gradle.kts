@@ -1,6 +1,7 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -9,15 +10,16 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-group = "com.adamglin.compose.google.fonts.fetch-ktor"
+group = "com.adamglin.compose.google.fonts"
 
 version = "1.0.0"
 
 kotlin {
     jvmToolchain(17)
 
-    android {
-        namespace = "com.adamglin.zithian.compose"
+    @Suppress("UnstableApiUsage")
+    androidLibrary {
+        namespace = "com.adamglin.compose.google.fonts"
         compileSdk = 36
         minSdk = 29
     }
@@ -64,25 +66,14 @@ kotlin {
         iosSimulatorArm64Main.configure { dependsOn(iosMain.get()) }
 
         commonMain.dependencies {
-            // ktor
+            // compose
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
+            implementation(libs.kotlinx.coroutines.core)
+
             implementation(projects.core)
-            implementation(libs.ktor.client.core)
-        }
-
-        androidMain.dependencies {
-            implementation(libs.ktor.client.okhttp)
-        }
-
-        jvmMain.dependencies {
-            implementation(libs.ktor.client.cio)
-        }
-
-        jsMain.dependencies {
-            implementation(libs.ktor.client.js)
-        }
-
-        iosMain.dependencies {
-            implementation(libs.ktor.client.darwin)
         }
         all {
             languageSettings {
@@ -92,5 +83,6 @@ kotlin {
     }
     compilerOptions {
         freeCompilerArgs.add("-Xcontext-parameters")
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }
