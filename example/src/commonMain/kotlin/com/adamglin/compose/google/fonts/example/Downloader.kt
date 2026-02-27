@@ -26,6 +26,8 @@ class Downloader {
                 } else {
                     return null
                 }
+            } finally {
+                println("download done")
             }
         }
         println("download result is null")
